@@ -11,7 +11,7 @@ x0 = [pi/6 0]';
 [t,x] = ode45(@(t, x) pendulumState(x), tspan, x0);
 
 %% measurement 
-encoder_sigma = .075;
+encoder_sigma = .05;
 y_meas = x(:, 1) + normrnd(0, encoder_sigma, [numel(t) 1]);
 
 figure
@@ -23,12 +23,12 @@ plot(t, y_meas, t, x(:,1))
 L = numel(x(1,:)); % number of states
 N = numel(t);
 
-q=0.0;    %std of process 
+q=1e-2;    %std of process 
 r=.1;    %std of measurement
 Q=q^2*eye(L); % covariance of process
 R=r^2;        % covariance of measurement  
 
-x_hat_k = [pi/12 0]' + r.*randn(2,1); 
+x_hat_k = [pi/12 0.1]'; 
 P_k = eye(L);
 
 x_hat = zeros(N, L); % estimate of state

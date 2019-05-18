@@ -46,15 +46,15 @@ L = numel(X(:,1)); % number of states
 M = numel(Y(:,1)); % number of measurements
 N = numel(tspan);
 
-q=1e-6;    %std of process 
-r=0.1;    %std of measurement
+q=1e-4;    %std of process 
+r=.1;    %std of measurement
 Q=q^2*eye(L-1); % covariance of process
 R=r^2*eye(M);        % covariance of measurement  
 
-x_hat_k = x0; % should fix to keep unit norm constraint
+x_hat_k = x0; 
 
 % because the quaternion has 3 DOF and 4 elements
-P_k = eye(L-1);
+P_k = .1*eye(L-1);
 
 x_hat = zeros(N, L); % estimate of state
 
@@ -65,8 +65,19 @@ for k=1:(N-1)
 end
 
 
+%% Find Quaternion Error
+
+mag = zeros(N-1,1);
+
+for i=1:(N-1)
+    dq = quat_prod((X(4:7, i).*[1 -1 -1 -1]'), x_hat(:, 4:7)');
+    
+    mag(i) = norm(quat_log(dq));
+end
+
+figure
+plot(tspan(1:(end-1)), mag)
 %% Plot
 
 figure
-plot(tspan, X(4,:), tspan, x_hat(:,4))
-
+plot(tspan, X(13,:), tspan, x_hat(:,13))

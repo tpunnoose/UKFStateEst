@@ -10,6 +10,7 @@ function X = calcSigmas(x, P, alpha)
     lam = eig(P);
     try
         A = alpha*chol(P)';
+        disp(cond(P));
     catch
         P = P + 1e-5 * eye(L);
         A = alpha*chol(P)';

@@ -23,12 +23,12 @@ plot(t, y_meas(:,1), t, x(:,1))
 L = numel(x(1,:)); % number of states
 N = numel(t);
 
-q=0.0;    %std of process 
+q=1e-3;    %std of process 
 r=0.1;    %std of measurement
 Q=q^2*eye(L); % covariance of process
 R=r^2*eye(L/2);        % covariance of measurement  
 
-x_hat_k = [pi/12 pi/12 0 0]' + r.*randn(4,1); 
+x_hat_k = [pi/6 pi/6 0 0]'; 
 P_k = eye(L);
 
 x_hat = zeros(N, L); % estimate of state

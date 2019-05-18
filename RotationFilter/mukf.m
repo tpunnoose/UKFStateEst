@@ -9,15 +9,18 @@ function [x, P] = mukf(f, x_prev, P_prev, h, z_meas, Q, R, dt)
     % dt - time step
     L = numel(x_prev); % number of elements in state vector
 
-    alpha = .25;
-    w_m = 1/(2*L)*ones(1, 2*L)';
-    w_c = 1/alpha^2 * w_m;
+    alpha = .1;
         
-    % generate sigma points
+    % generate sigma points:
     X_x = calcSigmasWRotations(x_prev, P_prev, alpha);
     
     n = size(X_x,2); % number of sigma points
     x_p = zeros(L,n);
+    
+    
+    % weighting vectors:
+    w_m = 1/(n)*ones(1, n)';
+    w_c = 1/alpha^2 * w_m;
     
     % propogate sigma points through state function and integrate via
     % midpoint integration:
@@ -36,14 +39,16 @@ function [x, P] = mukf(f, x_prev, P_prev, h, z_meas, Q, R, dt)
         x_p(:,k) = X_x(:,k) + (k1+2*k2+2*k3+k4)/6;
     end
 
-    xbar = zeros(L, 1);    
-    % calculate predicted state
-    for k=1:n
-        xbar = xbar + w_m(k)*x_p(:,k);
-    end
-    
-    % very not right but will change later
-    xbar = normalizeQuaternion(xbar);
+%     xbar = zeros(L, 1);    
+%     % calculate predicted state
+%     for k=1:n
+%         xbar = xbar + w_m(k)*x_p(:,k);
+%     end
+%     
+%     % very not right but will change later
+%     xbar = normalizeQuaternion(xbar);
+
+    xbar = averageWithQuaternion(x_p, w_m);
     
     z_p = zeros(numel(z_meas), n);
     % run propogated points through measurement model 

@@ -14,10 +14,10 @@ function X = calcSigmasWRotations(x, P, alpha)
 %     A = alpha*chol(P)';
     try
         A = alpha*chol(P)';
-        disp(cond(P));
+%         disp(cond(P));
     catch
         % numerical conditioning 
-        P = P + 1e-5 * eye(L);
+        P = P + 1e-5 * eye(L-1);
         A = alpha*chol(P)';
     end
 
