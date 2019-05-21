@@ -37,16 +37,8 @@ function [x, P] = mukf(f, x_prev, P_prev, h, z_meas, Q, R, dt)
         k3 = dt*f(X_x(:,k)+k2/2);
         k4 = dt*f(X_x(:,k)+k3);
         x_p(:,k) = X_x(:,k) + (k1+2*k2+2*k3+k4)/6;
+        x_p(:,k) = normalizeQuaternion(x_p(:,k));
     end
-
-%     xbar = zeros(L, 1);    
-%     % calculate predicted state
-%     for k=1:n
-%         xbar = xbar + w_m(k)*x_p(:,k);
-%     end
-%     
-%     % very not right but will change later
-%     xbar = normalizeQuaternion(xbar);
 
     xbar = averageWithQuaternion(x_p, w_m);
     

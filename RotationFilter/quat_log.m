@@ -4,7 +4,7 @@ function ql = quat_log(q)
 eps = 0.01;
 
 if(norm(q(2:4)) > eps)
-    phi = 2*atan2(norm(q(2:4)), q(1));
+    phi = 2*acos(q(1));%2*atan2(norm(q(2:4)), q(1));
     u = q(2:4)/norm(q(2:4));
     
     ql = phi*u;
