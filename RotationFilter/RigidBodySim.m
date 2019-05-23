@@ -11,18 +11,20 @@ r0 = [0 0 0]';
 q0 = [1 0 0 0]';
 v0 = [0 0.1 0]';
 om0 = [1 1 1]';
+bf0 = [0 0 0]'; % accelerometer bias
+bw0 = [0 0 0]'; % gyro bias
 
-x0 = [r0; q0; v0; om0];
+x0 = [r0; q0; v0; om0; bf0; bw0];
 
 N = tend/dt + 1;
-X = zeros(13, N-1);
+X = zeros(19, N-1);
 X(:,1) = x0;
 
 for i=2:(N-1)
-    k1 = dt*dynamics(X(:,i-1));
-    k2 = dt*dynamics(X(:,i-1)+k1/2);
-    k3 = dt*dynamics(X(:,i-1)+k2/2);
-    k4 = dt*dynamics(X(:,i-1)+k3);
+    k1 = dt*dynamics_sim(X(:,i-1));
+    k2 = dt*dynamics_sim(X(:,i-1)+k1/2);
+    k3 = dt*dynamics_sim(X(:,i-1)+k2/2);
+    k4 = dt*dynamics_sim(X(:,i-1)+k3);
     X(:,i) = X(:,i-1) + (k1+2*k2+2*k3+k4)/6;
     
     % renormalize quaternion
@@ -51,7 +53,7 @@ Q=q^2*eye(L-1); % covariance of process
 R=r^2*eye(M);        % covariance of measurement  
 
 x_hat_k = x0;
-x_hat_k(4:7) = quat_exp(pi/2 * [1 0 0]');
+x_hat_k(4:7) = quat_exp(pi/12 * [1 0 0]');
 
 % because the quaternion has 3 DOF and 4 elements
 P_k = .1*eye(L-1);
@@ -59,7 +61,7 @@ P_k = .1*eye(L-1);
 x_hat = zeros(N-1, L); % estimate of state
 
 for k=1:(N-1)
-    [x_hat_k, P_k] = mukf(@dynamics, x_hat_k, P_k, ...
+    [x_hat_k, P_k] = mukf(@dynamics_est, x_hat_k, P_k, ...
                         @meas, Y(:, k+1), Q, R, dt);
     x_hat(k,:) = x_hat_k;
 end

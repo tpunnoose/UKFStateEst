@@ -1,4 +1,4 @@
-function xdot = dynamics(x)
+function xdot = dynamics_est(x)
     % rotating cube
     m = 1.0;
     s = 1;
@@ -28,4 +28,8 @@ function xdot = dynamics(x)
     
     % angular acceleration
     xdot(11:13) = -inv(J)*cross(om, J*om); % no external torques
+    
+    % sensor bias
+    xdot(14:16) = zeros(3,1);
+    xdot(17:19) = zeros(3,1);
 end

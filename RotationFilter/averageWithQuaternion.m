@@ -4,9 +4,9 @@ function xbar = averageWithQuaternion(x, w)
 % Journal of Guidance, Control, and Dynamics 30.4 (2007): 1193-1197.
     n = numel(x(:,1));
     
-    xbar = zeros(13,1);
+    xbar = zeros(19,1);
     
-    xbar([1:3 8:13]) = x([1:3 8:13], :)*w;
+    xbar([1:3 8:19]) = x([1:3 8:19], :)*w;
     
     Q = x(4:7, :)*diag(sqrt(w));
     A = Q*Q';

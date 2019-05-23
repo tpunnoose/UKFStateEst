@@ -88,7 +88,7 @@ function [x, P] = mukf(f, x_prev, P_prev, h, z_meas, Q, R, dt)
     x_up = K*nu;
     
     % multiplicative quaternion update
-    x([1:3 8:13]) = (xbar([1:3 8:13]) + x_up([1:3 7:12]));
+    x([1:3 8:19]) = (xbar([1:3 8:19]) + x_up([1:3 7:18]));
     x(4:7) = quat_prod(xbar(4:7), quat_exp(x_up(4:6)));
     
     x = x';

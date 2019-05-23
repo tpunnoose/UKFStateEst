@@ -7,6 +7,10 @@ function y = meas(x)
     
     q_g_b = quat_prod(x(4:7), quat_prod(q_g_w, x(4:7).*[1 -1 -1 -1]));
     
-    y(1:3) = q_g_b(2:4);
-    y(4:6) = x(11:13);
+    
+    % rotated accelerometer measurement:
+    y(1:3) = q_g_b(2:4) + x(14:16);
+    
+    % angular velocity measurement
+    y(4:6) = x(11:13) + x(17:19);
 end

@@ -23,8 +23,8 @@ function X = calcSigmasWRotations(x, P, alpha)
 
     for i=1:(L-1)       
         % do simple additive sigma point calculation
-        X([1:3 8:13], i) = x([1:3 8:13]) + A([1:3 7:12], i);
-        X([1:3 8:13], i+(L-1)) = x([1:3 8:13]) - A([1:3 7:12], i);
+        X([1:3 8:19], i) = x([1:3 8:19]) + A([1:3 7:18], i);
+        X([1:3 8:19], i+(L-1)) = x([1:3 8:19]) - A([1:3 7:18], i);
         
         % do quaternion multiplicative update
         phi = A(4:6,i);
